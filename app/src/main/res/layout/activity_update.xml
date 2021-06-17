@@ -9,13 +9,12 @@
 
     <EditText
         android:id="@+id/familyName0"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_width="183dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Pal Family"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -112,17 +111,21 @@
         android:inputType="textPersonName"
         android:text="1448"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstName0" />
+
 
     <Button
         android:id="@+id/update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginStart="93dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="63dp"
         android:text="Update Contact"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toStartOf="@+id/delete"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameCard0" />
 
@@ -130,10 +133,32 @@
         android:id="@+id/delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="7dp"
+        android:layout_marginTop="23dp"
+        android:layout_marginEnd="43dp"
         android:text="Delete Contact"
-        android:textSize="13sp"
+        android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/update" />
+        app:layout_constraintTop_toBottomOf="@+id/nameCard0" />
+
+    <ImageView
+        android:id="@+id/phoneCall"
+        android:layout_width="38dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="43dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="63dp"
+        app:layout_constraintEnd_toStartOf="@+id/message"
+        app:layout_constraintStart_toEndOf="@+id/familyName0"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_phone" />
+
+    <ImageView
+        android:id="@+id/message"
+        android:layout_width="46dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="33dp"
+        android:layout_marginEnd="63dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_baseline_message_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>

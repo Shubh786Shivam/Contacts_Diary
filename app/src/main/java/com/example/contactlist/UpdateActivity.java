@@ -1,14 +1,23 @@
 package com.example.contactlist;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class UpdateActivity extends AppCompatActivity {
@@ -16,10 +25,13 @@ public class UpdateActivity extends AppCompatActivity {
     EditText familyName0, firstName0, houseNumber0, street0, town0, country0, postcode0, telephone0, nameCard0;
     Button update;
     Button delete;
+    ImageView phoneCall, message;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update);
+        phoneCall = findViewById(R.id.phoneCall);
+        message = findViewById(R.id.message);
         familyName0 = findViewById(R.id.familyName0);
         firstName0 = findViewById(R.id.firstName0);
         houseNumber0 = findViewById(R.id.houseNumber0);
@@ -48,6 +60,27 @@ public class UpdateActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                  confirmDialog();
+            }
+        });
+        phoneCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                callIntent.setData(Uri.parse("tel:" + telephone));
+                startActivity(callIntent);
+
+                 */
+                onCall();
+            }
+        });
+        message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent  = new Intent(getApplicationContext(), MessageActivity.class);
+                intent.putExtra("Phone", telephone);
+                startActivity(intent);
+
             }
         });
     }
@@ -105,5 +138,32 @@ public class UpdateActivity extends AppCompatActivity {
         });
         builder.create().show();
     }
+    public void onCall() {
+        int permissionCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE);
 
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.CALL_PHONE},
+                    1);
+        } else {
+            startActivity(new Intent(Intent.ACTION_CALL).setData(Uri.parse("tel:" + telephone)));
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                if ((grantResults.length > 0) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    onCall();
+                } else {
+                    Log.i("TAG", "Call Permission Not Granted");
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
 }
