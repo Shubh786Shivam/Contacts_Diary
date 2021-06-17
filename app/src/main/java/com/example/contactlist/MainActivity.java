@@ -4,18 +4,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+
+import androidx.core.view.MenuItemCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     MyDatabaseHelper mDB;
     ArrayList<String> id_List, familyList, nameList, townList, streetList, countryList, houseNumberList, postcodeList, telephoneList, nameCardList;
     CustomAdapter customAdapter;
+    RecyclerView.LayoutManager layoutManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +65,8 @@ public class MainActivity extends AppCompatActivity {
         customAdapter = new CustomAdapter(MainActivity.this, this, id_List, familyList, nameList,
                 townList, streetList, countryList, houseNumberList, postcodeList, telephoneList, nameCardList);
         recView.setAdapter(customAdapter);
-        recView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+      layoutManager = new LinearLayoutManager(MainActivity.this);
+        recView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -94,8 +103,60 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.my_menu, menu);
+        inflater.inflate(R.menu.search_menu, menu);
+        MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
+
+        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                int size = nameList.size();
+                int position = -1;
+                for(int j = 0; j < size; j++){
+                    if(nameList.get(j).toLowerCase().equals(query.toLowerCase())){
+                        position = j;
+                        break;
+                    }
+                }
+                //recView.getLayoutManager().scrollToPosition(position);
+
+                RecyclerView.SmoothScroller smoothScroller = new
+                        LinearSmoothScroller(MainActivity.this) {
+                            @Override
+                            protected int getVerticalSnapPreference() {
+                                return LinearSmoothScroller.SNAP_TO_START;
+                            }
+                        };
+/*
+                if(position != -1){
+                    RecyclerView.ViewHolder viewHolder = recView.findViewHolderForPosition(position);
+                    View view = viewHolder.itemView;
+
+                    viewHolder.view.setBackgroundColor(Color.parseColor("#00FFFF"));
+                }
+
+ */
+                smoothScroller.setTargetPosition(position);
+                layoutManager.startSmoothScroll(smoothScroller);
+
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+
+        });
+
+
         return super.onCreateOptionsMenu(menu);
     }
+
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
