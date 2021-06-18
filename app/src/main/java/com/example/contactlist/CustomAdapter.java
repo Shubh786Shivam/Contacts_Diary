@@ -7,6 +7,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,11 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> {
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHolder> implements Filterable {
     private Context context;
 
     Activity activity;
+    private ArrayList temp;
     private ArrayList id_list, familyList, nameList, townList, streetList, countryList, houseNumberList, postcodeList, telephoneList, nameCardList;
     CustomAdapter(Activity activity, Context context, ArrayList id_list, ArrayList familyList,
                   ArrayList nameList, ArrayList townList, ArrayList streetList, ArrayList countryList, ArrayList houseNumberList,
@@ -35,6 +41,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         this.postcodeList = postcodeList;
         this.telephoneList = telephoneList;
         this.nameCardList = nameCardList;
+        this.temp = new ArrayList(nameList);
     }
     @NonNull
     @Override
@@ -77,6 +84,38 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public int getItemCount() {
         return familyList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return filter;
+    }
+    Filter filter = new Filter(){
+       //Will Run On Background Thread
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            List<String> filteredList = new ArrayList<>();
+            if(constraint.toString().isEmpty()){
+                filteredList.addAll(temp);
+            }
+            else{
+                for(Object name : temp){
+                   if(name.toString().toLowerCase().contains(constraint.toString().toLowerCase())){
+                       filteredList.add(name.toString());
+                   }
+                }
+            }
+            FilterResults filterResults = new FilterResults();
+            filterResults.values = filteredList;
+            return filterResults;
+        }
+        //Will Run On UI Thread
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+             nameList.clear();
+             nameList.addAll((Collection<? extends String>) results.values);
+             notifyDataSetChanged();
+        }
+    };
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name;

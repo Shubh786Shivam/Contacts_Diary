@@ -110,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                /*if(nameList.contains(query)){
+                    customAdapter.getFilter().filter(query);
+                }else{
+                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
+                }
+
+                 */
+                /*
                 searchView.clearFocus();
                 int size = nameList.size();
                 int position = -1;
@@ -119,8 +127,6 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     }
                 }
-                //recView.getLayoutManager().scrollToPosition(position);
-
                 RecyclerView.SmoothScroller smoothScroller = new
                         LinearSmoothScroller(MainActivity.this) {
                             @Override
@@ -128,24 +134,19 @@ public class MainActivity extends AppCompatActivity {
                                 return LinearSmoothScroller.SNAP_TO_START;
                             }
                         };
-/*
-                if(position != -1){
-                    RecyclerView.ViewHolder viewHolder = recView.findViewHolderForPosition(position);
-                    View view = viewHolder.itemView;
 
-                    viewHolder.view.setBackgroundColor(Color.parseColor("#00FFFF"));
-                }
-
- */
                 smoothScroller.setTargetPosition(position);
                 layoutManager.startSmoothScroll(smoothScroller);
 
+
+                 */
 
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                customAdapter.getFilter().filter(newText);
                 return false;
             }
 
