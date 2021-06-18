@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -41,7 +42,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         this.postcodeList = postcodeList;
         this.telephoneList = telephoneList;
         this.nameCardList = nameCardList;
-        this.temp = new ArrayList(nameList);
+        temp = new ArrayList(nameList);
     }
     @NonNull
     @Override
@@ -53,9 +54,16 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-
+         Log.i("Position: ", Integer.toString(position));
+        Log.i("List Size: ", String.valueOf(nameList.size()));
         // holder.family.setText(String.valueOf(familyList.get(position)));
-        holder.name.setText(String.valueOf(nameList.get(position)));
+         if(position < nameList.size())
+          holder.name.setText(String.valueOf(nameList.get(position)));
+         if(position >= nameList.size()){
+             holder.name.setText(" ");
+             holder.image.setImageAlpha(0);
+         }
+
         //holder.mobile.setText(String.valueOf(telephoneList.get(position)));
         holder.mainLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,8 +119,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
         //Will Run On UI Thread
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
+            Log.i("Results: ", results.values.toString());
              nameList.clear();
-             nameList.addAll((Collection<? extends String>) results.values);
+            Log.i("Name List: ", nameList.toString());
+             //nameList.addAll((Collection<? extends String>) results.values);
+            nameList.addAll((List) results.values);
              notifyDataSetChanged();
         }
     };
@@ -120,9 +131,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView name;
         LinearLayout mainLayout;
+        ImageView image;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.name);
+            image = itemView.findViewById(R.id.imageView3);
             mainLayout = itemView.findViewById(R.id.mainLayout);
 
         }
